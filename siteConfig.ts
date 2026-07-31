@@ -5,7 +5,7 @@ export const siteConfig = {
   title: "启宁",
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   authorName: "启宁",
-  bio: "个人知识空间，用来记录医学知识、编程开发、设计探索与成长过程。",
+  bio: "个人知识空间，用来记录医学知识、设计探索与成长过程。",
 
   // 头像设置
   avatarUrl: "/avatar.png",
