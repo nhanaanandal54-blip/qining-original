@@ -1,12 +1,38 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { projects } from "./projectsData";
 import { FolderGit2, ExternalLink } from "lucide-react";
+import { getProjects, type ProjectItem } from "@/app/api";
+
+interface ProjectView {
+  id: number;
+  name: string;
+  description: string;
+  techStack: string[];
+  links: { github?: string; gitee?: string; live?: string; docs?: string };
+}
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [projects, setProjects] = useState<ProjectView[]>([]);
+
+  useEffect(() => {
+    getProjects()
+      .then((items: ProjectItem[]) => setProjects(items.map((project) => ({
+        id: project.id,
+        name: project.name,
+        description: project.description,
+        techStack: project.tech_stack || [],
+        links: {
+          github: project.link_github || undefined,
+          gitee: project.link_gitee || undefined,
+          live: project.link_live || undefined,
+          docs: project.link_docs || undefined,
+        },
+      }))))
+      .catch(() => setProjects([]));
+  }, []);
 
   const filtered = useMemo(() => {
     if (!searchQuery.trim()) return projects;
@@ -17,7 +43,7 @@ export default function ProjectsPage() {
         p.description.toLowerCase().includes(q) ||
         p.techStack.some((t) => t.toLowerCase().includes(q))
     );
-  }, [searchQuery]);
+  }, [projects, searchQuery]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12 relative z-10">

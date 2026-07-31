@@ -21,13 +21,13 @@ export default function PhotoWallPreview() {
   const isDragging = useRef(false);
 
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    const targetTitle = isMobile ? "2" : "1";
     getAlbums()
-      .then((albums) => {
-        const target = albums.find((a) => a.title === targetTitle);
-        if (!target) return;
-        return getAlbumPhotos(target.id);
+      .then(async (albums) => {
+        for (const album of albums) {
+          const albumPhotos = await getAlbumPhotos(album.id);
+          if (albumPhotos.length) return albumPhotos;
+        }
+        return [];
       })
       .then((data) => {
         if (data?.length) setPhotos(data.reverse());

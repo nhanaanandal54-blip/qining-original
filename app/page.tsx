@@ -1,20 +1,22 @@
 import HomeClient from "./HomeClient";
-
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+import { ensureDatabase, getDatabase, hasDatabase } from "@/lib/database";
 
 async function fetchProfileData() {
+  if (!hasDatabase()) {
+    return { postCount: 0, chatterCount: 0, photoCount: 0 };
+  }
   try {
-    const [postsRes, chattersRes, albums] = await Promise.all([
-      fetch(`${API}/api/posts/count?status=published`, { next: { revalidate: 60 } }).then((r) => r.json()),
-      fetch(`${API}/api/chatters/count?status=published`, { next: { revalidate: 60 } }).then((r) => r.json()),
-      fetch(`${API}/api/albums`, { next: { revalidate: 60 } }).then((r) => r.json()),
+    await ensureDatabase();
+    const sql = getDatabase();
+    const [posts, chatters, photos] = await Promise.all([
+      sql`SELECT COUNT(*)::int AS count FROM posts WHERE status = 'published'`,
+      sql`SELECT COUNT(*)::int AS count FROM chatters WHERE status = 'published'`,
+      sql`SELECT COUNT(*)::int AS count FROM photos`,
     ]);
     return {
-      postCount: postsRes.count ?? 0,
-      chatterCount: chattersRes.count ?? 0,
-      photoCount: Array.isArray(albums)
-        ? albums.reduce((acc: number, a: { photo_count?: number }) => acc + (a.photo_count ?? 0), 0)
-        : 0,
+      postCount: posts[0]?.count ?? 0,
+      chatterCount: chatters[0]?.count ?? 0,
+      photoCount: photos[0]?.count ?? 0,
     };
   } catch {
     return { postCount: 0, chatterCount: 0, photoCount: 0 };

@@ -34,14 +34,23 @@ npm run build
 
 ## 管理数据
 
-- 全站基础资料在 `siteConfig.ts`
-- 文章列表在 `data/posts.ts`
-- 说说在 `data/moments.ts`
-- 照片墙在 `data/photos.ts` 和 `data/albums.ts`
-- 项目在 `app/projects/projectsData.ts`
-- 关于页正文在 `app/about/about.md`
+- 后台地址：`/admin`
+- 可管理内容：文章、说说、项目、相册、照片、站点配置
+- 文章正文支持 Markdown
+- 图片字段填写本站路径或公开图片 URL
+- 关于页正文仍在 `app/about/about.md`
 
-后续你把自己的资料发来后，按这些文件补进去即可。
+生产环境使用 Neon PostgreSQL，连接信息由 Vercel Storage 自动写入 `DATABASE_URL`。管理密码只以 scrypt 哈希形式保存在 Vercel 环境变量中，不写入仓库。
+
+本地开发需要在 `.env.local` 配置：
+
+```env
+DATABASE_URL=postgresql://...
+ADMIN_PASSWORD_HASH=scrypt$...
+ADMIN_SESSION_SECRET=...
+```
+
+数据库表会在第一次访问内容 API 或后台时自动创建，无需手动执行 SQL。
 
 ## 开源与署名
 
