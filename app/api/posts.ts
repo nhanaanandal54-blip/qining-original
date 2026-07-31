@@ -30,25 +30,28 @@ export function getPosts(params?: {
   page?: number;
   size?: number;
 }) {
-  return request<PostItem[]>(`/api/posts${qs(params)}`);
+  return request<PostItem[]>(`/api/content/posts${qs(params)}`);
 }
 
 export function getPostsCount(status?: string) {
   return request<{ count: number }>(
-    `/api/posts/count${qs({ status })}`
+    `/api/content/posts${qs({ mode: "count", status })}`
   );
 }
 
 export function getPostBySlug(slug: string) {
-  return request<PostDetail>(`/api/posts/${slug}`);
+  return request<PostDetail>(`/api/content/posts${qs({ slug })}`);
 }
 
 export function getPostById(postId: number) {
-  return request<PostDetail>(`/api/posts/detail/${postId}`);
+  return request<PostDetail>(`/api/content/posts${qs({ id: postId })}`);
 }
 
 export function likePost(postId: number, unlike = false) {
-  return request<{ likes: number }>(`/api/posts/${postId}/${unlike ? "unlike" : "like"}`, {
+  return request<{ likes: number }>(`/api/content/posts${qs({
+    id: postId,
+    action: unlike ? "unlike" : "like",
+  })}`, {
     method: "POST",
   });
 }
