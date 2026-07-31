@@ -19,11 +19,22 @@
 
 ## 一键部署
 
-见根目录 `DEPLOY_ONE_CLICK.md`。推荐 GitHub Pages，推送后由 Actions 自动发布 `qining-original`。
+当前仓库使用 GitHub Pages，推送到 `main` 分支后即可通过 `https://nhanaanandal54-blip.github.io/qining-original/` 访问。
 
 ## 运行
 
 直接用浏览器打开 `index.html` 即可。
+
+## 管理数据
+
+公开内容放在 `data.json`：
+
+- `posts`：文章
+- `moments`：说说
+- `photos`：照片
+- `projects`：项目
+
+也可以先在页面里点“添加内容”测试，本地内容会保存在当前浏览器；确认后点“导出数据”，再把导出的 JSON 合并进 `data.json` 发布。
 
 ## 开源与署名
 
