@@ -381,6 +381,19 @@ button.primary-btn {
   font-weight: 900;
 }
 
+.image-avatar {
+  overflow: hidden;
+  background: var(--surface-strong);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
+}
+
+.image-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .signal-card {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -590,6 +603,19 @@ body.dark .contact-placeholder {
 
 .about-intro {
   min-height: 100%;
+}
+
+.about-profile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1.1rem;
+  align-items: center;
+}
+
+.profile-avatar {
+  width: clamp(6.5rem, 16vw, 9rem);
+  font-size: 0;
+  border-radius: 1.25rem;
 }
 
 .about-kicker {
@@ -997,6 +1023,10 @@ textarea {
   .feature-band,
   .about-layout,
   .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-profile {
     grid-template-columns: 1fr;
   }
 
