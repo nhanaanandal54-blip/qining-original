@@ -1,41 +1,48 @@
 # 启宁
 
-这是“启宁”的个人站点。当前线上版本保持 GitHub Pages 可直接访问的静态部署方式，同时参考 Kirameku 开源项目的玻璃拟态、背景氛围和小组件风格做视觉调整。
+这是启宁的个人知识空间。当前版本复用 Kirameku 的 Next.js 布局、玻璃拟态 UI、导航、背景、音乐、小组件和页面结构，并已移除原作者个人内容。
 
-## 当前包含
+## 内容边界
 
-- 首页
-- 文章
-- 说说
-- 照片
-- 项目
-- 搜索
-- 明暗主题
-- 便签、计时器、随机数小工具
-- 浏览器本地内容工作台
-- JSON 数据导出
+- 站点名称：启宁
+- 邮箱：435688960@qq.com
+- GitHub：https://github.com/nhanaanandal54-blip
+- 头像：`public/avatar.png`
+- 背景图：`public/backgrounds/`
+- 文章、说说、照片、项目数据：当前为空，后续只添加启宁自己的内容
 
-所有公开内容来自 `data.json`。可以先在页面里点“添加内容”测试，数据会存在当前浏览器，也可以导出成 JSON，再合并进 `data.json` 用于正式发布。
+不会使用原作者的昵称、头像、照片、文章、项目、音乐歌单、联系方式或其他个人资料。
 
-## 一键部署
+## 本地运行
 
-当前仓库使用 GitHub Pages，推送到 `main` 分支后即可通过 `https://nhanaanandal54-blip.github.io/qining-original/` 访问。
+```bash
+npm install
+npm run dev
+```
 
-## 运行
+打开 `http://localhost:3000` 查看。
 
-直接用浏览器打开 `index.html` 即可。
+## 构建
+
+```bash
+npm run build
+```
+
+## 部署
+
+这是 Next.js 动态站点，推荐使用 Vercel 一键部署。GitHub Pages 只能托管纯静态文件，无法完整支持原方案里的动态路由和 API 能力。
 
 ## 管理数据
 
-公开内容放在 `data.json`：
+- 全站基础资料在 `siteConfig.ts`
+- 文章列表在 `data/posts.ts`
+- 说说在 `data/moments.ts`
+- 照片墙在 `data/photos.ts` 和 `data/albums.ts`
+- 项目在 `app/projects/projectsData.ts`
+- 关于页正文在 `app/about/about.md`
 
-- `posts`：文章
-- `moments`：说说
-- `photos`：照片
-- `projects`：项目
-
-也可以先在页面里点“添加内容”测试，本地内容会保存在当前浏览器；确认后点“导出数据”，再把导出的 JSON 合并进 `data.json` 发布。
+后续你把自己的资料发来后，按这些文件补进去即可。
 
 ## 开源与署名
 
-Kirameku 使用 MIT License。若后续迁移或复用 Kirameku 的完整源码方案，需要保留原项目的许可证和版权声明。当前站点的个人内容、头像、背景图和文案由启宁提供或定制。
+Kirameku 使用 MIT License。因为当前项目复用了 Kirameku 的源码方案，需要保留原项目许可和版权声明；启宁自己的文案、头像、背景图和未来内容归启宁所有。
