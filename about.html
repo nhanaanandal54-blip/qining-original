@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>关于启宁</title>
+    <meta name="description" content="启宁的个人简介、学习方向与联系方式" />
+    <link rel="stylesheet" href="./styles.css?v=20260731" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar" aria-label="站点导航">
+        <a class="brand" href="./index.html#home" aria-label="启宁首页">
+          <span class="brand-mark">启</span>
+          <span>
+            <strong>启宁</strong>
+            <small>个人空间</small>
+          </span>
+        </a>
+
+        <nav class="nav">
+          <a href="./index.html#home">首页</a>
+          <a class="active" href="./about.html">关于</a>
+          <a href="./index.html#posts">文章</a>
+          <a href="./index.html#moments">说说</a>
+          <a href="./index.html#photos">照片</a>
+          <a href="./index.html#projects">项目</a>
+        </nav>
+
+        <div class="side-panel">
+          <p class="side-label">关于</p>
+          <p>这里集中放我的个人简介、学习方向和联系方式。</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <a class="ghost-btn" href="./index.html#home">返回首页</a>
+          <div class="top-actions">
+            <button id="themeBtn" class="icon-btn" type="button" aria-label="切换主题">◐</button>
+          </div>
+        </header>
+
+        <section class="about-page">
+          <div class="page-head">
+            <p class="eyebrow">About Me</p>
+            <h1>关于我</h1>
+          </div>
+
+          <div class="about-layout">
+            <article class="about-card about-intro">
+              <p class="about-kicker">你好，我是启宁。</p>
+              <p>我是一名即将进入大学的大一新生，热爱学习与探索，专注于医学知识、编程开发与设计领域。</p>
+              <p>这个网站是我的个人知识空间，用来记录学习过程、整理知识体系、分享探索成果，也记录自己不断成长的过程。</p>
+              <blockquote>保持好奇，持续学习，把每一次探索变成成长的积累。</blockquote>
+              <p>我相信，知识只有经过整理、实践和应用，才能真正产生价值。</p>
+            </article>
+
+            <aside class="contact-widget about-contact" aria-label="联系我">
+              <p class="widget-label">联系我</p>
+              <a href="mailto:435688960@qq.com">
+                <span>@</span>
+                <strong>Email</strong>
+                <small>435688960@qq.com</small>
+              </a>
+              <a href="https://github.com/nhanaanandal54-blip" target="_blank" rel="noreferrer">
+                <span>GH</span>
+                <strong>GitHub</strong>
+                <small>github.com/nhanaanandal54-blip</small>
+              </a>
+              <div class="contact-placeholder">
+                <span>+</span>
+                <strong>其他社交平台</strong>
+                <small>待补充</small>
+              </div>
+            </aside>
+          </div>
+
+          <div class="about-grid">
+            <article class="about-card">
+              <span class="about-index">01</span>
+              <h2>我的方向</h2>
+              <ul>
+                <li><strong>医学知识：</strong>学习医学相关知识，探索生命科学与健康领域。</li>
+                <li><strong>编程开发：</strong>学习计算机技术，通过代码创造实际应用。</li>
+                <li><strong>设计领域：</strong>研究网页设计、用户体验与视觉表达。</li>
+              </ul>
+            </article>
+
+            <article class="about-card">
+              <span class="about-index">02</span>
+              <h2>我的经历</h2>
+              <p>从接触互联网领域开始，我逐渐发现持续学习的重要性。</p>
+              <p>互联网让我接触到了更广阔的世界，也让我认识到知识积累和实践探索的价值。我希望通过不断学习医学、编程和设计，将不同领域的知识结合起来，创造更多有价值的作品。</p>
+            </article>
+
+            <article class="about-card">
+              <span class="about-index">03</span>
+              <h2>关于本站</h2>
+              <p>本站是我的个人知识库，用于记录医学学习笔记、编程学习记录、设计作品、技术探索和个人成长思考。</p>
+              <p>希望这里不仅是一个博客，也是一个不断完善的个人知识体系。</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const savedTheme = localStorage.getItem("qining-theme");
+      if (savedTheme === "dark") document.body.classList.add("dark");
+      document.querySelector("#themeBtn").addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        localStorage.setItem("qining-theme", document.body.classList.contains("dark") ? "dark" : "light");
+      });
+    </script>
+  </body>
+</html>
