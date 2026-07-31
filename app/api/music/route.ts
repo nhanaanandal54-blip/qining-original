@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import Meting from "@meting/core";
+
+interface MetingSong {
+  name?: string;
+  artist?: string;
+  url?: string;
+  pic?: string;
+  lrc?: string;
+}
 
 interface SongData {
   id: string;
@@ -10,82 +17,65 @@ interface SongData {
   lrcUrl: string;
 }
 
+const METING_API = "https://api.injahow.cn/meting/";
+
+function songIdFromUrl(url: string, fallback: string) {
+  try {
+    return new URL(url).searchParams.get("id") || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+async function fetchMeting(type: "playlist" | "song", id: string) {
+  const params = new URLSearchParams({ server: "netease", type, id });
+  const response = await fetch(`${METING_API}?${params.toString()}`, {
+    cache: "no-store",
+  });
+
+  if (!response.ok) return [];
+
+  const data = await response.json();
+  return Array.isArray(data) ? (data as MetingSong[]) : [];
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const playlistId = searchParams.get("id");
-  const songIds = searchParams.get("ids");
+  const playlistId = searchParams.get("id")?.trim() || "";
+  const songIds = (searchParams.get("ids") || "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
 
-  if (!playlistId && !songIds) {
+  if (!playlistId && songIds.length === 0) {
     return NextResponse.json(
-      { error: "需要提供 id (歌单ID) 或 ids (歌曲ID,逗号分隔)" },
+      { error: "需要提供 id（歌单 ID）或 ids（歌曲 ID，逗号分隔）" },
       { status: 400 }
     );
   }
 
-  const meting = new Meting("netease");
-  meting.format(true);
-
-  try {
-    let tracks: { id: string; name: string; artist: string[]; pic_id: string; url_id: string; lyric_id: string }[] = [];
-
-    if (playlistId) {
-      const raw = await meting.playlist(playlistId);
-      const parsed = JSON.parse(raw as string);
-      tracks = Array.isArray(parsed) ? parsed : [];
-    } else if (songIds) {
-      const ids = songIds.split(",").map((s) => s.trim()).filter(Boolean);
-      const results = await Promise.all(
-        ids.map(async (id) => {
-          try {
-            const raw = await meting.song(id);
-            const parsed = JSON.parse(raw as string);
-            return Array.isArray(parsed) ? parsed : [parsed];
-          } catch {
-            return [];
-          }
-        })
-      );
-      tracks = results.flat();
-    }
-
-    // 批量获取 URL
-    const songs: SongData[] = await Promise.all(
-      tracks.map(async (track) => {
-        let src = "";
-        try {
-          const urlRaw = await meting.url(track.url_id, 320);
-          const urlData = JSON.parse(urlRaw as string);
-          src = (urlData.url || "").replace(/^http:\/\//, "https://");
-        } catch {
-          // ignore
-        }
-
-        let cover = "";
-        try {
-          const picRaw = await meting.pic(track.pic_id, 300);
-          const picData = JSON.parse(picRaw as string);
-          cover = (picData.url || "").replace(/^http:\/\//, "https://");
-        } catch {
-          // ignore
-        }
-
-        return {
-          id: String(track.id),
-          title: track.name || "未知歌曲",
-          artist: Array.isArray(track.artist) ? track.artist.join(", ") : String(track.artist || "未知歌手"),
-          cover,
-          src,
-          lrcUrl: track.lyric_id ? `https://api.injahow.cn/meting/?server=netease&type=lrc&id=${track.lyric_id}` : "",
-        };
-      })
-    );
-
-    return NextResponse.json(songs.filter((s) => s.src));
-  } catch (err) {
-    console.error("Meting error:", err);
-    return NextResponse.json(
-      { error: "获取音乐数据失败" },
-      { status: 500 }
-    );
+  const requests: Promise<MetingSong[]>[] = [];
+  if (playlistId) requests.push(fetchMeting("playlist", playlistId).catch(() => []));
+  for (const id of [...new Set(songIds)]) {
+    requests.push(fetchMeting("song", id).catch(() => []));
   }
+
+  const tracks = (await Promise.all(requests)).flat();
+  const songs = tracks
+    .filter((track) => track.url)
+    .map((track, index): SongData => {
+      const src = String(track.url || "").replace(/^http:\/\//, "https://");
+      return {
+        id: songIdFromUrl(src, `song-${index}`),
+        title: String(track.name || "未知歌曲"),
+        artist: String(track.artist || "未知歌手"),
+        cover: String(track.pic || "").replace(/^http:\/\//, "https://"),
+        src,
+        lrcUrl: String(track.lrc || "").replace(/^http:\/\//, "https://"),
+      };
+    });
+
+  return NextResponse.json(
+    Array.from(new Map(songs.map((song) => [song.id, song])).values())
+  );
 }

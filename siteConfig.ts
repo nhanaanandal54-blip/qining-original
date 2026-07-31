@@ -28,9 +28,12 @@ export const siteConfig = {
   photoWallImage: "",
 
   // 云音乐配置（网易云音乐）
-  // 填歌单 ID 则自动拉取整个歌单，填歌曲 ID 列表则只播放指定歌曲
-  cloudMusicPlaylistId: "",             // 歌单 ID（优先）
-  cloudMusicIds: [],                     // 歌曲 ID 列表（歌单为空时使用）
+  // 歌单与额外歌曲会自动合并；重复或失效歌曲会被跳过
+  cloudMusicPlaylistId: "17943739323",  // 歌单 ID
+  cloudMusicIds: [                       // 额外歌曲 ID（会与歌单合并去重）
+    "3399839173",
+    "492725541",
+  ],
 
   // 后端 API 地址（留空，开发通过 next.config.ts rewrites 代理，生产通过 Nginx 反代）
   apiBaseUrl: "",
@@ -46,7 +49,7 @@ export const siteConfig = {
   },
 
   // 站点信息
-  buildDate: "2026-05-07T12:00:00",
+  buildDate: "2026-07-31T18:11:26+08:00",
   footerBadges: [
     { name: "Next.js 15", color: "text-sky-500" },
     { name: "React 19", color: "text-cyan-400" },

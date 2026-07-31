@@ -93,7 +93,7 @@ export default function WelcomeScreen() {
                 className="text-4xl md:text-5xl font-bold text-sky-400"
                 style={{ fontFamily: "serif" }}
               >
-                的
+                の
               </span>
               <span
                 className="text-4xl md:text-5xl font-bold text-white tracking-tight"
