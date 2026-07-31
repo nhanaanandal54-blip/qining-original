@@ -107,7 +107,7 @@ export default function AdminPage() {
     setLoading(true);
     setDraft(null);
     try {
-      const response = await fetch(`/api/admin/resources/${resourceKey}`, {
+      const response = await fetch(`/api/admin/content?resource=${encodeURIComponent(resourceKey)}`, {
         cache: "no-store",
       });
       if (response.status === 401) {
@@ -197,7 +197,7 @@ export default function AdminPage() {
     const isEditing = Boolean(draft.id);
     try {
       const response = await fetch(
-        `/api/admin/resources/${activeKey}${isEditing ? `/${draft.id}` : ""}`,
+        `/api/admin/content?resource=${encodeURIComponent(activeKey)}${isEditing ? `&id=${draft.id}` : ""}`,
         {
           method: isEditing ? "PATCH" : "POST",
           headers: { "Content-Type": "application/json" },
@@ -218,7 +218,7 @@ export default function AdminPage() {
 
   async function deleteItem(item: ContentRecord) {
     if (!item.id || !window.confirm("确认永久删除这条内容？")) return;
-    const response = await fetch(`/api/admin/resources/${activeKey}/${item.id}`, {
+    const response = await fetch(`/api/admin/content?resource=${encodeURIComponent(activeKey)}&id=${item.id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
