@@ -23,7 +23,7 @@ export default function HomeClient({
   photoCount: number;
 }) {
   return (
-    <div className="w-full max-w-6xl mx-auto py-6 md:py-12 px-4 sm:px-10 relative z-10">
+    <div className="home-3d-stage w-full max-w-6xl mx-auto py-6 md:py-12 px-4 sm:px-10 relative z-10">
       {/* 搜索栏 */}
       <FadeIn>
         <div className="hidden md:block">
@@ -34,7 +34,7 @@ export default function HomeClient({
       <main className="flex flex-col gap-4 md:gap-6 w-full">
         {/* 第一行：个人信息 + 播放器 */}
         <FadeIn delay={0.1}>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full items-stretch">
+          <div className="home-depth-panel grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full items-stretch">
             <div className="md:col-span-8 flex w-full">
               <ProfileCard
                 postCount={postCount}
@@ -50,14 +50,14 @@ export default function HomeClient({
 
         {/* 歌词栏 */}
         <FadeIn delay={0.15}>
-          <div className="w-full">
+          <div className="home-depth-panel w-full">
             <LyricBar />
           </div>
         </FadeIn>
 
         {/* 第二行：照片墙 + 文章 + 说说 + 舔狗日记 */}
         <FadeIn delay={0.2}>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full items-stretch">
+          <div className="home-depth-panel grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 w-full items-stretch">
             <div className="md:col-span-4 h-full">
               <PhotoWallPreview />
             </div>
@@ -77,7 +77,7 @@ export default function HomeClient({
 
         {/* 底部数据面板 */}
         <FadeIn delay={0.25}>
-          <div className="w-full">
+          <div className="home-depth-panel w-full">
             <SiteDashboard />
           </div>
         </FadeIn>

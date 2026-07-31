@@ -1,7 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useBackground } from "@/components/providers/BackgroundProvider";
 import { siteConfig } from "@/siteConfig";
+
+const SpatialBackdrop = dynamic(() => import("@/components/layout/SpatialBackdrop"), {
+  ssr: false,
+});
 
 export default function BackgroundRenderer() {
   const { bgImage, bgBlur } = useBackground();
@@ -34,6 +39,7 @@ export default function BackgroundRenderer() {
               }}
             />
           )}
+          <SpatialBackdrop />
         </>
       )}
     </div>
