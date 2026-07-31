@@ -11,7 +11,7 @@ export const siteConfig = {
   avatarUrl: "/avatar.png",
 
   // 背景设置
-  useGradient: true,
+  useGradient: false,
   themeColors: ["#dbeafe", "#f8fafc", "#e0f2fe", "#f1f5f9"],
   bgImages: [
     "/backgrounds/bg-01.jpg",
