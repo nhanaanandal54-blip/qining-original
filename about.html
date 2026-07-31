@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>关于启宁</title>
     <meta name="description" content="启宁的个人简介、学习方向与联系方式" />
-    <link rel="stylesheet" href="./styles.css?v=20260731" />
+    <link rel="stylesheet" href="./styles.css?v=20260731-bg" />
   </head>
   <body>
     <div class="shell">
@@ -37,6 +37,7 @@
         <header class="topbar">
           <a class="ghost-btn" href="./index.html#home">返回首页</a>
           <div class="top-actions">
+            <button id="backgroundBtn" class="icon-btn" type="button" aria-label="背景设置">▧</button>
             <button id="themeBtn" class="icon-btn" type="button" aria-label="切换主题">◐</button>
           </div>
         </header>
@@ -113,5 +114,6 @@
         localStorage.setItem("qining-theme", document.body.classList.contains("dark") ? "dark" : "light");
       });
     </script>
+    <script src="./background.js?v=20260731-bg"></script>
   </body>
 </html>
