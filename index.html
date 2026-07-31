@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>启宁</title>
+    <meta name="description" content="启宁的个人空间" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar" aria-label="站点导航">
+        <a class="brand" href="#home" aria-label="启宁首页">
+          <span class="brand-mark">启</span>
+          <span>
+            <strong>启宁</strong>
+            <small>个人空间</small>
+          </span>
+        </a>
+
+        <nav class="nav">
+          <a href="#home" data-route="home">首页</a>
+          <a href="#posts" data-route="posts">文章</a>
+          <a href="#moments" data-route="moments">说说</a>
+          <a href="#photos" data-route="photos">照片</a>
+          <a href="#projects" data-route="projects">项目</a>
+        </nav>
+
+        <div class="side-panel">
+          <p class="side-label">状态</p>
+          <p id="todayText">今天也在慢慢填满这里。</p>
+        </div>
+        <div class="side-panel mini-actions">
+          <button id="composeBtn" type="button">添加内容</button>
+          <button id="exportBtn" type="button">导出数据</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="search">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="搜索文章、项目、片段" />
+          </div>
+          <div class="top-actions">
+            <button id="themeBtn" class="icon-btn" type="button" aria-label="切换主题">◐</button>
+            <button id="toolsBtn" class="icon-btn" type="button" aria-label="打开小工具">⚙</button>
+          </div>
+        </header>
+
+        <section id="home" class="view active" data-view="home">
+          <div class="hero">
+            <div>
+              <p class="eyebrow">Qining Space</p>
+              <h1>启宁</h1>
+              <p class="lead">这里将放你的文章、照片、项目、想法和日常。它不是套壳改名，而是为“启宁”重新设计的个人内容系统。</p>
+              <div class="hero-actions">
+                <button class="primary-btn" id="heroComposeBtn" type="button">写第一条内容</button>
+                <a class="ghost-btn" href="#projects">查看项目区</a>
+              </div>
+            </div>
+            <div class="profile-orbit" aria-label="个人资料占位">
+              <div class="signal-card">
+                <div class="avatar">启</div>
+                <div>
+                  <strong>原创模式</strong>
+                  <span>内容、素材、结构均等待你的本人资料填入</span>
+                </div>
+              </div>
+              <div class="orbit-note">后续可接入后台、数据库、评论、访问统计和自定义域名</div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <article>
+              <strong id="postCount">0</strong>
+              <span>文章</span>
+            </article>
+            <article>
+              <strong id="momentCount">0</strong>
+              <span>说说</span>
+            </article>
+            <article>
+              <strong id="photoCount">0</strong>
+              <span>照片</span>
+            </article>
+            <article>
+              <strong id="projectCount">0</strong>
+              <span>项目</span>
+            </article>
+          </div>
+
+          <div class="section-grid">
+            <section class="panel">
+              <div class="section-title">
+                <h2>最近文章</h2>
+                <a href="#posts">全部</a>
+              </div>
+              <div id="homePosts" class="list empty-list"></div>
+            </section>
+            <section class="panel">
+              <div class="section-title">
+                <h2>近况</h2>
+                <a href="#moments">全部</a>
+              </div>
+              <div id="homeMoments" class="list empty-list"></div>
+            </section>
+          </div>
+
+          <section class="feature-band">
+            <article>
+              <span>01</span>
+              <h3>本地草稿</h3>
+              <p>先在浏览器里添加内容，确认风格后再迁移到正式后台。</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>数据导出</h3>
+              <p>一键导出 JSON，后续可导入数据库，不把内容锁在页面里。</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>原创边界</h3>
+              <p>不复用旧项目的源码实现和个人素材，方便你诚实标注原创。</p>
+            </article>
+          </section>
+        </section>
+
+        <section id="posts" class="view" data-view="posts">
+          <div class="page-head">
+            <p class="eyebrow">Writing</p>
+            <h1>文章</h1>
+          </div>
+          <div id="postsList" class="content-grid"></div>
+        </section>
+
+        <section id="moments" class="view" data-view="moments">
+          <div class="page-head">
+            <p class="eyebrow">Moments</p>
+            <h1>说说</h1>
+          </div>
+          <div id="momentsList" class="timeline"></div>
+        </section>
+
+        <section id="photos" class="view" data-view="photos">
+          <div class="page-head">
+            <p class="eyebrow">Gallery</p>
+            <h1>照片</h1>
+          </div>
+          <div id="photosList" class="photo-grid"></div>
+        </section>
+
+        <section id="projects" class="view" data-view="projects">
+          <div class="page-head">
+            <p class="eyebrow">Works</p>
+            <h1>项目</h1>
+          </div>
+          <div id="projectsList" class="content-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="toolsDialog" class="tools-dialog">
+      <form method="dialog">
+        <header>
+          <h2>小工具</h2>
+          <button class="icon-btn" value="close" aria-label="关闭">×</button>
+        </header>
+        <div class="tool-tabs">
+          <button type="button" class="tool-tab active" data-tool="note">便签</button>
+          <button type="button" class="tool-tab" data-tool="timer">计时</button>
+          <button type="button" class="tool-tab" data-tool="random">随机</button>
+        </div>
+        <div class="tool-view active" data-tool-view="note">
+          <textarea id="noteBox" placeholder="写一点临时想法，会保存在这个浏览器里。"></textarea>
+        </div>
+        <div class="tool-view" data-tool-view="timer">
+          <div class="timer-face" id="timerText">00:00</div>
+          <div class="tool-actions">
+            <button type="button" id="timerStart">开始</button>
+            <button type="button" id="timerReset">重置</button>
+          </div>
+        </div>
+        <div class="tool-view" data-tool-view="random">
+          <div class="random-result" id="randomResult">点击生成一个数字</div>
+          <button type="button" id="randomBtn">生成</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="composeDialog" class="compose-dialog">
+      <form method="dialog">
+        <header>
+          <h2>添加内容</h2>
+          <button class="icon-btn" value="close" aria-label="关闭">×</button>
+        </header>
+        <div class="form-grid">
+          <label>
+            类型
+            <select id="composeType">
+              <option value="posts">文章</option>
+              <option value="moments">说说</option>
+              <option value="photos">照片</option>
+              <option value="projects">项目</option>
+            </select>
+          </label>
+          <label>
+            标题/名称
+            <input id="composeTitle" type="text" placeholder="例如：第一篇文章" />
+          </label>
+          <label class="wide">
+            内容/简介
+            <textarea id="composeBody" placeholder="写下摘要、想法或项目说明"></textarea>
+          </label>
+          <label id="composeUrlWrap" class="wide hidden">
+            图片地址
+            <input id="composeUrl" type="url" placeholder="https://..." />
+          </label>
+        </div>
+        <footer class="dialog-actions">
+          <button type="button" id="clearDataBtn" class="danger-btn">清空本地数据</button>
+          <button type="button" id="saveContentBtn" class="primary-btn">保存</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
