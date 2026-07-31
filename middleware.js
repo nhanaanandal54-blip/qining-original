@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 
-const API_ORIGIN = "https://qining-original.vercel.app";
-
 export function middleware(request) {
   const sourceUrl = new URL(request.url);
-  const targetUrl = new URL(sourceUrl.pathname + sourceUrl.search, API_ORIGIN);
+  if (!sourceUrl.hostname.endsWith(".edgeone.dev")) {
+    return NextResponse.next();
+  }
+
+  const targetUrl = new URL(
+    sourceUrl.pathname.replace(/^\/api/, "/backend") + sourceUrl.search,
+    sourceUrl
+  );
 
   return NextResponse.rewrite(targetUrl);
 }
