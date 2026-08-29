@@ -1,4 +1,5 @@
 import { siteConfig } from "@/siteConfig";
+import BusuanziCounter from "@/components/layout/BusuanziCounter";
 
 export default function ProfileCard({
   postCount = 0,
@@ -42,7 +43,7 @@ export default function ProfileCard({
       </div>
 
       <div className="flex flex-col md:flex-row items-end md:items-center justify-between mt-4 md:mt-8 gap-4 md:gap-6 relative z-10">
-        <div className="flex gap-6 w-full md:w-auto justify-around md:justify-start">
+        <div className="flex gap-4 md:gap-6 w-full md:w-auto justify-around md:justify-start flex-wrap">
           <StatItem
             count={postCount}
             label="文章"
@@ -59,6 +60,18 @@ export default function ProfileCard({
             count={photoCount}
             label="照片"
             color="text-pink-600 dark:text-pink-400"
+          />
+          <div className="w-px h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block" />
+          <StatItem
+            count={<BusuanziCounter type="uv" />}
+            label="访客"
+            color="text-sky-600 dark:text-sky-400"
+          />
+          <div className="w-px h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block" />
+          <StatItem
+            count={<BusuanziCounter type="pv" />}
+            label="浏览"
+            color="text-emerald-600 dark:text-emerald-400"
           />
         </div>
 
@@ -89,7 +102,7 @@ function StatItem({
   label,
   color,
 }: {
-  count: number;
+  count: React.ReactNode;
   label: string;
   color: string;
 }) {
