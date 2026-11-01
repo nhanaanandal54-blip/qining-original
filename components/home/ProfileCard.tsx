@@ -6,7 +6,111 @@
 
 import { useEffect, useState } from "react";
 import { siteConfig } from "@/siteConfig";
-import BusuanziCounter from "@/components/layout/BusuanziCounter";
+
+const STATS_REFRESH_INTERVAL_MS = 10_000;
+
+type SiteStats = {
+  uv: number;
+  pv: number;
+};
+
+let recordPromise: Promise<SiteStats> | null = null;
+
+async function requestStats(method: "GET" | "POST"): Promise<SiteStats> {
+  const response = await fetch("/api/stats", {
+    method,
+    cache: "no-store",
+    headers: { Accept: "application/json" },
+  });
+
+  if (!response.ok) throw new Error("统计数据暂时不可用");
+
+  const data: unknown = await response.json();
+  if (!data || typeof data !== "object") {
+    throw new Error("统计数据格式错误");
+  }
+
+  const { uv, pv } = data as Record<string, unknown>;
+  if (
+    typeof uv !== "number" ||
+    typeof pv !== "number" ||
+    !Number.isSafeInteger(uv) ||
+    !Number.isSafeInteger(pv) ||
+    uv < 0 ||
+    pv < 0
+  ) {
+    throw new Error("统计数据格式错误");
+  }
+
+  return { uv, pv };
+}
+
+function recordVisit() {
+  if (!recordPromise) {
+    recordPromise = requestStats("POST").catch((error: unknown) => {
+      recordPromise = null;
+      throw error;
+    });
+  }
+  return recordPromise;
+}
+
+function useSiteStats() {
+  const [stats, setStats] = useState<SiteStats | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    let inFlight = false;
+    let recorded = false;
+
+    const sync = async () => {
+      if (inFlight) return;
+      inFlight = true;
+
+      try {
+        const next = recorded
+          ? await requestStats("GET")
+          : await recordVisit();
+        recorded = true;
+
+        if (!cancelled) {
+          setStats(next);
+          setFailed(false);
+        }
+      } catch {
+        if (!cancelled) setFailed(true);
+      } finally {
+        inFlight = false;
+      }
+    };
+
+    void sync();
+
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") void sync();
+    }, STATS_REFRESH_INTERVAL_MS);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") void sync();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  const format = (value: number) => value.toLocaleString("zh-CN");
+  const fallback = failed ? "--" : "…";
+
+  return {
+    uv: stats ? format(stats.uv) : fallback,
+    pv: stats ? format(stats.pv) : fallback,
+  };
+}
 
 type SiteConfigOverrides = {
   avatarUrl?: string;
@@ -27,6 +131,7 @@ export default function ProfileCard({
 }) {
   const [overrides, setOverrides] = useState<SiteConfigOverrides>({});
   const [loaded, setLoaded] = useState(false);
+  const { uv, pv } = useSiteStats();
 
   useEffect(() => {
     let cancelled = false;
@@ -99,9 +204,9 @@ export default function ProfileCard({
           <div className="w-px h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block" />
           <StatItem count={photoCount} label="照片" color="text-pink-600 dark:text-pink-400" />
           <div className="w-px h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block" />
-          <StatItem count={<BusuanziCounter type="uv" />} label="访客" color="text-sky-600 dark:text-sky-400" />
+          <StatItem count={uv} label="访客" color="text-sky-600 dark:text-sky-400" />
           <div className="w-px h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block" />
-          <StatItem count={<BusuanziCounter type="pv" />} label="浏览" color="text-emerald-600 dark:text-emerald-400" />
+          <StatItem count={pv} label="浏览" color="text-emerald-600 dark:text-emerald-400" />
         </div>
 
         <div className="flex gap-3 flex-wrap justify-end">
