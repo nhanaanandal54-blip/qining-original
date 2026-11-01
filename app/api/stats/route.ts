@@ -8,6 +8,8 @@ export const dynamic = "force-dynamic";
 
 const VISITOR_COOKIE = "qining_visitor_id";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+const INITIAL_UV = 107;
+const INITIAL_PV = 201;
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const NO_STORE_HEADERS = {
@@ -43,6 +45,36 @@ function ensureStatsSchema() {
         VALUES (1, 0)
         ON CONFLICT (id) DO NOTHING
       `;
+
+      // 一次性补齐初始数据；使用事务锁避免多个冷启动实例重复补访客。
+      await sql.begin(async (transaction) => {
+        await transaction`SELECT pg_advisory_xact_lock(201107201)`;
+
+        // 留出本次访问的 +1，使首次显示值正好为 201。
+        await transaction`
+          UPDATE site_stats
+          SET pv = GREATEST(pv, ${INITIAL_PV - 1}), updated_at = NOW()
+          WHERE id = 1
+        `;
+
+        const visitorRows = await transaction`
+          SELECT COUNT(*)::int AS count FROM site_visitors
+        `;
+        const missingVisitors = Math.max(
+          0,
+          INITIAL_UV - toCount(visitorRows[0]?.count)
+        );
+
+        if (missingVisitors > 0) {
+          await transaction`
+            INSERT INTO site_visitors (visitor_id)
+            SELECT 'seed_' || md5(
+              random()::text || clock_timestamp()::text || seeded.series::text
+            )
+            FROM generate_series(1, ${missingVisitors}) AS seeded(series)
+          `;
+        }
+      });
     })().catch((error) => {
       statsSchemaPromise = undefined;
       throw error;
